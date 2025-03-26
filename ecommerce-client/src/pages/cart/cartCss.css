@@ -1,0 +1,44 @@
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly
+}
+
+.orderItem-container{
+  background-color: rgb(91, 143, 143);
+  margin: 5px;
+  padding: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5%;
+  img{
+    height: 100px;
+  }
+}
+
+p{
+  margin: 0px;
+}
+
+button{
+  margin: 5px;
+  padding: 7px;
+  background-color: rgb(50, 84, 87);
+}
+
+.quantity-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-container{
+  border: 2px solid  rgb(91, 143, 143);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,40 @@
+.products-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .product-container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+
+        .article-style{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        article{
+            margin-bottom: 20px;
+        }
+
+        .img-container{
+            width: 80%;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            img{
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+}

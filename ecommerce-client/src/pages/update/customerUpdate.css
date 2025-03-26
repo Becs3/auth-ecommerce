@@ -1,0 +1,8 @@
+input {
+    display: flex;
+    flex-direction: column;
+}
+
+.object-container{
+    margin-top: 5%;
+}
