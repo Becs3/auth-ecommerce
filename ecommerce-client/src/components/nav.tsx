@@ -1,6 +1,7 @@
 import { NavLink } from "react-router"
 
 export const Nav = () =>{
+
     return (
         <nav>
             <ul>

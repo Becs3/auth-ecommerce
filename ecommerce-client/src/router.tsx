@@ -16,6 +16,8 @@ import { UpdateCustomerPage } from "./pages/update/updateCostumer";
 import { CreateCustomerPage } from "./pages/create/createCostumer";
 import { Cart } from "./pages/cart/cart";
 import { OrderConfirmatin } from "./pages/cart/orderConfirmation";
+import ProtectedRoutes from "./components/protectedRoute";
+import { Login } from "./pages/login";
 
 
 
@@ -44,12 +46,16 @@ export const router = createBrowserRouter([
       {
         path: "/order-confirmation",
         element:<OrderConfirmatin />,
+      },
+      {
+        path: "/login",
+        element:<Login />,
       }
     ],
   },
   {
     path: "/",
-    element: <Layout />,
+    element: <ProtectedRoutes><Layout /></ProtectedRoutes>,
     errorElement: <NotFound />,
     children: [
       {
