@@ -1,9 +1,8 @@
-import { useContext, useEffect } from "react";
-import { CartContext } from "../../context/cartContext";
+import { useEffect } from "react";
+import { useCart } from "../../hooks/useCart";
 
 export const CartItems = () => {
-  const cartContext = useContext(CartContext);
-  const { cart, UpdateCart, DeleteFromCart } = cartContext;
+  const { cart, UpdateCart, DeleteFromCart } = useCart();
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));

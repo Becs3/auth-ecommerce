@@ -1,16 +1,15 @@
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import "./cartCss.css";
 import { CartCustomerDetails } from "./cartCustomerDetails";
 import { CartItems } from "./cartItems";
 import { Customer } from "../../models/costumer";
-import { CartContext } from "../../context/cartContext";
 import { useOrder } from "../../hooks/useOrder";
 import { IOrder } from "../../models/order";
 import { IOrderItem } from "../../models/orderItem";
+import { useCart } from "../../hooks/useCart";
 
 export const Cart = () => {
-    const cartContext = useContext(CartContext);
-    const {cart} = cartContext;
+    const {cart} = useCart();
     const {createOrderHandler, updateOrderHandler} = useOrder();
     const [custId, setCustId] = useState<number>(0)
     const [sessionId, setSessionId] = useState("");
@@ -88,7 +87,7 @@ export const Cart = () => {
       const data = await response.json();
       console.log(data.session_id)
 
-      const session_id = data.session_id
+      /* const session_id = data.session_id
       if(session_id) {
         setSessionId(session_id)
         const update = await updateOrderHandler(orderId, {
@@ -105,11 +104,11 @@ export const Cart = () => {
         
       } else {
         console.log("id not found")
-      }
+      } */
 
 
       // Redirect to Stripe Hosted Checkout
-       window.location.href = data.checkout_url;  
+      window.location.href = data.checkout_url;  
 
     } catch (error) {
       console.log(error);

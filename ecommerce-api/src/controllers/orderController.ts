@@ -167,7 +167,7 @@ const createOrderItem = async (data: IOrderItem) => {
   }
 }
 
-export const updateOrder = async (req: Request, res: Response) => {
+/* export const updateOrder = async (req: Request, res: Response) => {
   const id: string = req.params.id;
   const { payment_status, payment_id, order_status }: IOrder = req.body;
   
@@ -186,7 +186,30 @@ export const updateOrder = async (req: Request, res: Response) => {
   } catch(error) {
     res.status(500).json({error: logError(error)})
   }
-}
+} */
+
+export const updateOrder = async (orderId: string, data: { payment_status: string, payment_id: string, order_status: string }) => {
+  try {
+    const sql = `
+      UPDATE orders 
+      SET payment_status = ?, payment_id = ?, order_status = ?
+      WHERE id = ?
+    `;
+    const params = [data.payment_status, data.payment_id, data.order_status, orderId];
+    const [result] = await db.query<ResultSetHeader>(sql, params);
+
+    if (result.affectedRows === 0) {
+      console.log("Order not found");
+      return false;
+    }
+
+    console.log("Order updated successfully");
+    return true;
+  } catch (error) {
+    console.error("Error updating order:", error);
+    return false;
+  }
+};
 
 export const deleteOrder = async (req: Request, res: Response) => {
   const id: string = req.params.id;

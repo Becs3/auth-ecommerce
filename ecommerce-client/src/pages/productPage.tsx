@@ -1,14 +1,11 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { IProduct } from "../models/product"
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router";
 import { useProducts } from "../hooks/useProduct";
 import "../style/productStyle.css"
-import { CartContext } from "../context/cartContext";
+import { useCart } from "../hooks/useCart";
 
-/* type AddToCartProps = {
-    AddToCart: (product: IProduct, quantity: number) => void;
-  } */
 
 export const ProductPage = () => {
         const [product, setProduct] = useState<IProduct | null>(null)
@@ -16,12 +13,7 @@ export const ProductPage = () => {
         const {isLoading, error, fetchProductByIdHandler} = useProducts();
         const { id } = useParams();
         const nav = useNavigate();
-        const cartContext = useContext(CartContext);
-        const {AddToCart} = cartContext;
-
-        if(!cartContext){
-            throw new Error("Problem with context")
-        }
+        const {AddToCart} = useCart();
     
         useEffect (()=> {
             if(!id) return;
