@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cookieParser());
 app.use(cors({
   origin: "http://localhost:5173",
-  credentials: true,  // ✅ Allows cookies
+  credentials: true,  
 }));
 
 // Routes
@@ -23,7 +23,9 @@ import orderRouter from "./routes/orders";
 import orderItemRouter from "./routes/orderItems";
 import authRouter from "./routes/auth";
 import { IOrder } from "./models/IOrder";
-import { updateOrder } from "./controllers/orderController";
+import { getOrderById, updateOrder } from "./controllers/orderController";
+import { getProductById, updateProduct} from "./controllers/productController";
+import { IProduct } from "./models/IProduct";
 app.use('/products', productRouter)
 app.use('/customers', customerRouter)
 app.use('/orders', orderRouter)
@@ -43,8 +45,8 @@ const stripe = require('stripe')(process.env.SECRET_KEY);
 
 app.post('/stripe/create-checkout-session-hosted', async (req: Request, res: Response) => {
   
-  const order: IOrder = req.body;
-  const items = order.order_items;
+  const {newOrder, orderId} = req.body;
+  const items = newOrder.order_items;
 
   const lineItems = items.map((item) => {
 
@@ -69,7 +71,7 @@ const session = await stripe.checkout.sessions.create({
   mode: 'payment',
     success_url: `http://localhost:5173/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: 'http://localhost:5173/cart',
-    metadata: {orderId: order.id},
+    metadata: {orderId},
   });
 
   res.json({
@@ -80,10 +82,8 @@ const session = await stripe.checkout.sessions.create({
 });
 
 app.post("/stripe/webhook", async (req: Request, res: Response) => {
-
-
+  
   const event = req.body;
-  //const {updateOrderHandler} = useOrder();
   
     switch (event.type){
       case "checkout.session.completed":
@@ -98,24 +98,48 @@ app.post("/stripe/webhook", async (req: Request, res: Response) => {
         //update payment status     
           try {
              await updateOrder(orderId, {
-              payment_status: "pending", 
+              payment_status: "received", 
               payment_id: session.id, 
-              order_status: "unpaid",
+              order_status: "paid",
             });
           
          } catch(error) {
           error} 
-        
-        break;
+
         //update stock
-        //send confirmation
-  
+
+/*         const updateProductStock = async (payment_id: string) => {
+          const getOrderData = `SELECT id FROM orders WHERE payment_id = ?`;
+        
+          const [rows] = await db.query<IOrder[]>(getOrderData, [payment_id]);
+        
+          const orderID = rows[0].id;
+        
+          const orderItems = await getOrderItems(orderID);
+        
+          if (orderItems.length === 0) return;
+        
+          const productIDs = orderItems.map((item) => item.product_id);
+        
+          const caseStatements = orderItems
+            .map(() => `WHEN id = ? THEN stock - ?`)
+            .join(" ");
+        
+          const values = orderItems.flatMap((item) => [item.product_id, item.quantity]);
+        
+          const query = `
+            UPDATE products
+            SET stock = CASE ${caseStatements} 
+            END
+            WHERE id IN (${[...productIDs]});
+          `;
+        
+          await db.query(query, values);
+        }; */
+
       default:
-        console.log("unhandled event type")
-    } 
+        console.log("Unhandled event type:", event.type);
   
-    res.json({received: true});
-  }) 
-
-
-
+    res.json({ received: true });
+  }
+})

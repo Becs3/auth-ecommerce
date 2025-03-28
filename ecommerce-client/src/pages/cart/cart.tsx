@@ -80,7 +80,7 @@ export const Cart = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newOrder)
+          body: JSON.stringify({newOrder, orderId})
         }
       );
 

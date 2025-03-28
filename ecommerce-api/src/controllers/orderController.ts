@@ -40,7 +40,45 @@ export const getOrders = async (_: any, res: Response) => {
   }
 }
 
+/* export const fetchOrderById = async (id: number) => {
+  try {
+    const sql = `
+      SELECT 
+        *, 
+        orders.id AS order_id,
+        orders.created_at AS orders_created_at, 
+        customers.created_at AS customers_created_at 
+      FROM orders 
+      LEFT JOIN customers ON orders.customer_id = customers.id
+      LEFT JOIN order_items ON orders.id = order_items.order_id
+      WHERE orders.id = ?
+    `;
+    const [rows] = await db.query<IOrder[]>(sql, [id])
+
+    return rows.length > 0 ? formatOrderDetails(rows) : null;
+  } catch (error) {
+    throw new Error(`Database error: ${error.message}`);
+  }
+};
+
 export const getOrderById = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id, 10); 
+  
+  if (isNaN(id)) {
+    return res.status(400).json({ message: "Invalid order ID" });
+  }
+
+  try {
+    const order = await fetchOrderById(id);
+    order
+      ? res.json(order)
+      : res.status(404).json({ message: "Order not found" });
+  } catch (error) {
+    res.status(500).json({ error: logError(error) });
+  }
+}; */
+
+ export const getOrderById = async (req: Request, res: Response) => {
   const id: string = req.params.id;
   
   try {
@@ -65,7 +103,7 @@ export const getOrderById = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({error: logError(error)})
   }
-}
+} 
 
 
 export const getOrderByPaymentId = async (req: Request, res: Response) => {
